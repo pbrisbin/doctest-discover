@@ -17,7 +17,7 @@ main = do
     let sources = case customConfiguration of
                     Just (Config _ (Just sfs)) -> sfs
                     _ -> ["src"]
-    files <- sequence $ map getAbsDirectoryContents sources
+    files <- mapM getAbsDirectoryContents sources
     let testDriverFileContents = driver (concat files) customConfiguration
     writeFile dst testDriverFileContents
 

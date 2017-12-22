@@ -13,7 +13,7 @@ import Config
 -- True
 --
 driver :: [FilePath] -> Maybe Config -> String
-driver files c = unlines ["module Main where", "import Test.DocTest", "main :: IO ()", "main = doctest " ++ (show $ generateConfig files c)]
+driver files c = unlines ["module Main where", "import Test.DocTest", "main :: IO ()", "main = doctest " ++ show (generateConfig files c)]
 
 -- | Generates doctest configuration
 --
