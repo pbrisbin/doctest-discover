@@ -1,6 +1,7 @@
 module Main where
 
 import Config
+import Control.Exception (IOException, catch)
 import Control.Monad
 import Runner
 import System.Directory
@@ -28,9 +29,12 @@ main = do
 -- >>> map (stripPrefix prefix) <$> getAbsDirectoryContents "test/example"
 -- [Just "/test/example/Foo.hs",Just "/test/example/Foo/Bar.hs"]
 --
+-- >>> getAbsDirectoryContents "/does/not/exist"
+-- []
+--
 getAbsDirectoryContents :: FilePath -> IO [FilePath]
 getAbsDirectoryContents dir = do
-    paths <- getDirectoryContents dir
+    paths <- getDirectoryContents dir `catch` ignoreErrorWithEmpty
     paths' <- forM (filter (`notElem` [".", ".."]) paths) $ \path -> do
         canonicalized <- canonicalizePath $ dir </> path
         isDir <- doesDirectoryExist canonicalized
@@ -38,3 +42,6 @@ getAbsDirectoryContents dir = do
             then getAbsDirectoryContents canonicalized
             else return [canonicalized]
     return $ concat paths'
+  where
+    ignoreErrorWithEmpty :: Monad m => IOException -> m [a]
+    ignoreErrorWithEmpty _ = return []
