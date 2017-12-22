@@ -1,0 +1,44 @@
+---
+name: doctest-discover
+version: '0.1.0.7'
+synopsis: Easy way to run doctests via cabal
+description: >
+  doctest-discover provides an easy way to run doctests via cabal
+category: Testing
+author: Karun Ramakrishnan
+maintainer: karun012@gmail.com
+license: PublicDomain
+github: karun012/doctest-discover
+homepage: http://github.com/karun012/doctest-discover
+
+dependencies:
+  - base >=4.7 && <5
+  - doctest
+
+ghc-options: -Wall
+
+library:
+  source-dirs: src
+  dependencies:
+    - directory
+    - filepath
+    - aeson
+    - bytestring
+
+executables:
+  doctest-discover:
+    main: Main.hs
+    source-dirs: src
+    dependencies:
+      - directory
+      - filepath
+      - aeson
+      - bytestring
+
+tests:
+  doctests:
+    main: Doctest-Main.hs
+    source-dirs: test
+    ghc-options: -threaded
+    dependencies:
+      - doctest-discover
