@@ -4,7 +4,6 @@ module Runner (
 
 import Data.List
 import Config
-import System.FilePath.Posix
 
 -- | Generates doctest driver
 --
@@ -14,7 +13,7 @@ import System.FilePath.Posix
 -- True
 --
 driver :: [FilePath] -> Maybe Config -> String
-driver files config = unlines $ ["module Main where", "import Test.DocTest", "main :: IO ()", "main = doctest " ++ (show $ generateConfig files config)]
+driver files c = unlines ["module Main where", "import Test.DocTest", "main :: IO ()", "main = doctest " ++ (show $ generateConfig files c)]
 
 -- | Generates doctest configuration
 --
@@ -34,9 +33,9 @@ driver files config = unlines $ ["module Main where", "import Test.DocTest", "ma
 -- ["-iqux","foo.hs"]
 --
 generateConfig :: [FilePath] -> Maybe Config -> [String]
-generateConfig files (Just (Config Nothing (Just sourceFolders))) = ((++) (map ("-i"++) sourceFolders) . notCurrentAndParent . filterHaskellSources) files
+generateConfig files (Just (Config Nothing (Just sfs))) = ((++) (map ("-i"++) sfs) . notCurrentAndParent . filterHaskellSources) files
 generateConfig files (Just (Config (Just ignoreList) Nothing)) = ((:) "-isrc" . filter (`notElem` ignoreList) . notCurrentAndParent . filterHaskellSources) files
-generateConfig files (Just (Config (Just ignoreList) (Just sourceFolders))) = ((++) (map ("-i"++) sourceFolders) . filter (`notElem` ignoreList) . notCurrentAndParent . filterHaskellSources) files
+generateConfig files (Just (Config (Just ignoreList) (Just sfs))) = ((++) (map ("-i"++) sfs) . filter (`notElem` ignoreList) . notCurrentAndParent . filterHaskellSources) files
 generateConfig files _ = ((:) "-isrc" . notCurrentAndParent . filterHaskellSources) files
 
 -- | Filters out current and parent directories 

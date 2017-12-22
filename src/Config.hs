@@ -2,8 +2,7 @@
 
 module Config where
 
-import Data.Aeson ((.:), (.:?), decode, FromJSON(..), Value(..))
-import Control.Applicative
+import Data.Aeson ((.:?), decode, FromJSON(..), withObject)
 import qualified Data.ByteString.Lazy.Char8 as B
 
 data Config = Config {
@@ -12,8 +11,8 @@ data Config = Config {
 } deriving (Show)
 
 instance FromJSON Config where
-    parseJSON (Object v) = 
-        Config <$> 
+    parseJSON = withObject "Config" $ \v ->
+        Config <$>
         (v .:? "ignore") <*>
         (v .:? "sourceFolders")
 
