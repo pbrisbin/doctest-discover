@@ -1,10 +1,10 @@
 module Main where
 
-import System.Environment
+import Config
 import Control.Monad
 import Runner
-import Config
 import System.Directory
+import System.Environment
 import System.FilePath
 
 main :: IO ()
@@ -12,11 +12,11 @@ main = do
     (_ : _ : dst : args) <- getArgs
     let configFileContents = case args of
                               (configFile : _) -> readFile configFile
-                              _ -> return ""
+                              _                -> return ""
     customConfiguration <- config <$> configFileContents
     let sources = case customConfiguration of
                     Just (Config _ (Just sfs)) -> sfs
-                    _ -> ["src"]
+                    _                          -> ["app", "src"]
     files <- mapM getAbsDirectoryContents sources
     let testDriverFileContents = driver (concat files) customConfiguration
     writeFile dst testDriverFileContents

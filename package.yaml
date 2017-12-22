@@ -13,27 +13,23 @@ homepage: http://github.com/karun012/doctest-discover
 
 dependencies:
   - base >=4.7 && <5
-  - doctest
 
 ghc-options: -Wall
 
 library:
   source-dirs: src
   dependencies:
-    - directory
-    - filepath
     - aeson
     - bytestring
 
 executables:
   doctest-discover:
     main: Main.hs
-    source-dirs: src
+    source-dirs: app
     dependencies:
+      - doctest-discover
       - directory
       - filepath
-      - aeson
-      - bytestring
 
 tests:
   doctests:
@@ -41,4 +37,4 @@ tests:
     source-dirs: test
     ghc-options: -threaded
     dependencies:
-      - doctest-discover
+      - doctest
